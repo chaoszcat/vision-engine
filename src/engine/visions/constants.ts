@@ -1,0 +1,7 @@
+export const MEDIA_PIPE_GESTURE_CATEGORY_CLOSED_FIST = "Closed_Fist"
+export const MEDIA_PIPE_GESTURE_CATEGORY_OPEN_PALM = "Open_Palm"
+export const MEDIA_PIPE_GESTURE_CATEGORY_Pointing_Up = "Pointing_Up"
+export const MEDIA_PIPE_GESTURE_CATEGORY_THUMB_DOWN = "Thumb_Down"
+export const MEDIA_PIPE_GESTURE_CATEGORY_THUMB_UP = "Thumb_Up"
+export const MEDIA_PIPE_GESTURE_CATEGORY_VICTORY = "Victory"
+export const MEDIA_PIPE_GESTURE_CATEGORY_ILOVEYOU = "ILoveYou"
