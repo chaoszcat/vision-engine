@@ -18,11 +18,18 @@ import { videoOnGestureArtisan } from "engine/artisans/videoOnGestureArtisan.ts"
  */
 engine(
   gestureVision({
-    numHands: 2,
+    // number of hands, [1, 8]
+    numHands: 8,
+
+    // true to use worker
     useWorker: true,
   }),
   {
-    statsPanel: 2,
+    // Controlling the stats panel [false, 0 (fps), 1 (ms), 2 (mb)]
+    statsPanel: 0,
+
+    // Controlling how many detections per seconds [1-30]
+    detectionsPerSecond: 10,
   })
   .run(
     /**

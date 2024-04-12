@@ -5,20 +5,6 @@ import Stats from "stats.js"
 
 export function engine(visionEngine: VisionEngine, opts?: EngineOpts) {
 
-  // 0. Init stats for fun stuff
-  let stats: Stats | null = null
-  if (opts?.statsPanel !== false) {
-    stats = new Stats()
-    stats.showPanel(opts?.statsPanel as number)
-    document.body.appendChild(stats.dom)
-  }
-
-  // 1. Start by declaring the THREE scene
-  const width = window.innerWidth
-  const height = window.innerHeight
-  const [scene, renderer, camera] = initThree(width, height)
-  document.body.appendChild(renderer.domElement)
-
   // save video trial
   // setTimeout(async () => {
   //   const stream = renderer.domElement.captureStream(30)
@@ -38,25 +24,44 @@ export function engine(visionEngine: VisionEngine, opts?: EngineOpts) {
     run(...artisans: Artisan[]) {
       ;(async () => {
 
-        // 3. Start by requesting the media stream
-        const mediaStream = await (opts?.stream || cameraStream())
+        // 0. Init stats for fun stuff
+        let stats: Stats | null = null
+        if (opts?.statsPanel !== false) {
+          stats = new Stats()
+          stats.showPanel(opts?.statsPanel as number)
+          document.body.appendChild(stats.dom)
+        }
+
+        // 1. Start by requesting the media stream
+        const mediaStream = await (opts?.stream || cameraStream())()
+
+        // 2. Create the global video element
+        const video = document.createElement("video")
+        video.srcObject = mediaStream
+        await video.play()
+
+        // 3. We then start the scene based off the video we get
+        const width = video.videoWidth
+        const height = video.videoHeight
+        const [scene, renderer, camera] = initThree(width, height)
+        document.body.appendChild(renderer.domElement)
 
         // 4. Initialize our vision engine with the media stream
-        const detect = await visionEngine(mediaStream)
+        const detect = await visionEngine(video)
         const msPerDetection = Math.floor(1000 / Math.min(30, Math.max(1, (opts?.detectionsPerSecond ?? 10))))
 
-        const runners: ArtisanRunner[] = []
-
         // 5. Before run loop, we initialize all init scripts of all artisans
+        const runners: ArtisanRunner[] = []
         for (let i = 0; i < artisans.length; ++i) {
-          const run = await artisans[i]({ scene, renderer, camera, width, height, mediaStream })
+          const run = await artisans[i]({ scene, renderer, camera, width, height, video })
           if (run) runners.push(run)
         }
 
+        // 6. Vision result caches
         let visionResult: VisionResult
-        let lastDetection: number = window.performance.now()
+        let lastDetection: number = 0
 
-          // 6. Main run loop - it's doing vision engine detection and rendering at the same time
+          // 7. Main run loop
         ;(function animate() {
 
           if (stats) stats.begin()
@@ -66,7 +71,7 @@ export function engine(visionEngine: VisionEngine, opts?: EngineOpts) {
             scene,
             renderer,
             camera,
-            mediaStream,
+            video,
             width,
             height,
             visionResult,

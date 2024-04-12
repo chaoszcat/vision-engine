@@ -14,7 +14,6 @@ export type GestureVisionOptions = {
 export function gestureVision(opts?: GestureVisionOptions) {
 
   // Create the video stream and draw it on a canvas
-  const video = document.createElement("video")
   const gestureRecognizerOptions: GestureRecognizerOptions = {
     baseOptions: {
       modelAssetPath: MODEL,
@@ -24,10 +23,7 @@ export function gestureVision(opts?: GestureVisionOptions) {
     numHands: Math.min(8, Math.max(1, Math.round(opts?.numHands ?? 2))),
   }
 
-  return async (mediaStream: MediaStream) => {
-    video.srcObject = mediaStream
-    await video.play()
-
+  return async (video: HTMLVideoElement) => {
     if (opts?.useWorker) {
 
       // Create the video stream and draw it on a canvas
@@ -39,6 +35,7 @@ export function gestureVision(opts?: GestureVisionOptions) {
       // Changing to IMAGE recogniser as it's for creating the bitmaps
       gestureRecognizerOptions.runningMode = "IMAGE"
 
+      // Listening to the callback from Vision Result
       worker.addEventListener("message", (msg) => {
         if (msg.data.visionResult) {
           visionResult = msg.data.visionResult

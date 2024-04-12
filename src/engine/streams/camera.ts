@@ -1,6 +1,9 @@
 const defaultConstraints: MediaStreamConstraints = {
   video: {
-    width: 1280, height: 720, facingMode: "user",
+    // requesting full window width and height if possible
+    width: window.innerWidth,
+    height: window.innerHeight,
+    facingMode: "user",
   },
 }
 
@@ -8,12 +11,12 @@ const defaultConstraints: MediaStreamConstraints = {
  * Default camera stream
  * @param constraints
  */
-export function cameraStream(constraints: MediaStreamConstraints = defaultConstraints): Promise<MediaStream> {
-  return new Promise(async (resolve, reject) => {
-    if (window.navigator.mediaDevices) {
-      resolve(await window.navigator.mediaDevices.getUserMedia(constraints))
+export function cameraStream(constraints: MediaStreamConstraints = defaultConstraints): () => Promise<MediaStream> {
+  return async () => {
+    if ("mediaDevices" in navigator && "getUserMedia" in navigator.mediaDevices) {
+      return await window.navigator.mediaDevices.getUserMedia(constraints)
     } else {
-      reject("Cannot get media-stream-providers")
+      throw new Error("Cannot get camera")
     }
-  })
+  }
 }
