@@ -19,7 +19,6 @@ export function engine(visionEngine: VisionEngine, opts?: EngineOpts) {
   //   }, 15000)
   // }, 5000)
 
-  // 2. Return a run function for the user to hook to
   return {
     run(...artisans: Artisan[]) {
       ;(async () => {
@@ -86,6 +85,7 @@ export function engine(visionEngine: VisionEngine, opts?: EngineOpts) {
           }
 
           if (stats) stats.end()
+
           requestAnimationFrame(animate)
         })()
       })()

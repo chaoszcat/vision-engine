@@ -13,7 +13,6 @@ export type GestureVisionOptions = {
 
 export function gestureVision(opts?: GestureVisionOptions) {
 
-  // Create the video stream and draw it on a canvas
   const gestureRecognizerOptions: GestureRecognizerOptions = {
     baseOptions: {
       modelAssetPath: MODEL,
@@ -67,7 +66,7 @@ export function gestureVision(opts?: GestureVisionOptions) {
       return async () => {
         if (video.currentTime !== lastVideoTime) {
           lastVideoTime = video.currentTime
-          return visionResult = gr.recognizeForVideo(video, Date.now())
+          visionResult = gr.recognizeForVideo(video, Date.now())
         }
         return visionResult
       }
