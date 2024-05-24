@@ -5,19 +5,6 @@ import Stats from "stats.js"
 
 export function engine(visionEngine: VisionEngine, opts?: EngineOpts) {
 
-  // save video trial
-  // setTimeout(async () => {
-  //   const stream = renderer.domElement.captureStream(30)
-  //   const m = new MediaRecorder(stream)
-  //   m.ondataavailable = (e) => {
-  //     saveAs(e.data, "video.mkv")
-  //   }
-  //   m.start()
-  //
-  //   setTimeout(async () => {
-  //     m.stop()
-  //   }, 15000)
-  // }, 5000)
 
   return {
     run(...artisans: Artisan[]) {
@@ -44,6 +31,20 @@ export function engine(visionEngine: VisionEngine, opts?: EngineOpts) {
         const height = video.videoHeight
         const [scene, renderer, camera] = initThree(width, height)
         document.body.appendChild(renderer.domElement)
+
+        // save video trial
+        // setTimeout(async () => {
+        //   const stream = renderer.domElement.captureStream(30)
+        //   const m = new MediaRecorder(stream)
+        //   m.ondataavailable = (e) => {
+        //     saveAs(e.data, "video.mkv")
+        //   }
+        //   m.start()
+        //
+        //   setTimeout(async () => {
+        //     m.stop()
+        //   }, 11000)
+        // }, 1000)
 
         // 4. Initialize our vision engine with the media stream
         const detect = await visionEngine(video)
